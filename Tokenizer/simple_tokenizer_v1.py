@@ -1,4 +1,7 @@
 import re
+refrence_text = "../assets/the-verdict.txt"
+
+# to get token_id from tokens and vice-versa
 class simple_tokenizer_v1:
     def __init__(self,vocab):
         self.str_to_int = vocab #{"a":1,"b":2,...}
@@ -11,7 +14,24 @@ class simple_tokenizer_v1:
         return token_ids
 
     def decode(self,token_ids):
-        sentence = " ".join([self.int_to_str(token_id) for token_id in token_ids])
+        sentence = " ".join([self.int_to_str[token_id] for token_id in token_ids])
         sentence = re.sub(r'\s+([,.?!"()\'])', r'\1',sentence) 
         return sentence
+
+# To create a refrence vocab   
+class vocab_list:
+    def __init__(self,refrence_text):
+        with open(refrence_text,"r") as f:
+            self.sample_text = f.read()
+    def generate_vocab(self):
+        tokens = re.split(r'([,.:;?_!"()\']|--|\s)', self.sample_text)
+        tokens = [token.strip() for token in tokens if token.strip()]
+        tokens = {token:index for index,token in enumerate(tokens)}
+        return tokens
+            
         
+# vocab = vocab_list(refrence_text)
+# refrence_vocab = vocab.generate_vocab()
+# tokenizer = simple_tokenizer_v1(refrence_vocab)
+# token_list = tokenizer.encode("let her go")
+# print(token_list)
