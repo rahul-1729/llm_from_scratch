@@ -26,12 +26,18 @@ class vocab_list:
     def generate_vocab(self):
         tokens = re.split(r'([,.:;?_!"()\']|--|\s)', self.sample_text)
         tokens = [token.strip() for token in tokens if token.strip()]
+        tokens.extend(["<|endoftext|>","<|unk|>"]) #to handle end of text and unknown words
         tokens = {token:index for index,token in enumerate(tokens)}
         return tokens
             
         
-# vocab = vocab_list(refrence_text)
-# refrence_vocab = vocab.generate_vocab()
-# tokenizer = simple_tokenizer_v1(refrence_vocab)
-# token_list = tokenizer.encode("let her go")
-# print(token_list)
+vocab = vocab_list(refrence_text)
+refrence_vocab = vocab.generate_vocab()
+tokenizer = simple_tokenizer_v1(refrence_vocab)
+# print(len(refrence_vocab))
+token_id_list = tokenizer.encode("let her go")
+# print(len(token_id_list))
+generated_sentence = tokenizer.decode(token_id_list)
+# print(generated_sentence)
+
+# Note: If you write a text other thanpresent in the story it will give keyerror, vocab doen't contain all the words
